@@ -4,7 +4,6 @@ from peaks.models import Pereval_added
 from peaks.serializers import PerevalSerializer
 
 
-
 class PerevalViewSet(viewsets.ModelViewSet):
     queryset = Pereval_added.objects.all()
     serializer_class = PerevalSerializer
@@ -12,12 +11,12 @@ class PerevalViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-             pereval = serializer.save()
-             return Response({
-                 'status': 200,
-                 'message': 'Отправлено успешно',
-                 'id': pereval.id
-             })
+            pereval = serializer.save()
+            return Response({
+                'status': 200,
+                'message': 'Отправлено успешно',
+                'id': pereval.id
+            })
         else:
             return Response({
                 "status": 400,  # Статус код лучше сменить на 400 Bad Request

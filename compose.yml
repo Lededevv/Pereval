@@ -1,0 +1,56 @@
+
+services:
+  webpereval:
+    build: .
+    image: pereval_api
+    container_name: dj_api
+    command: >-
+      sh -c "
+        python manage.py makemigrations &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    links:
+      - 'postgres:dbps'
+    networks:
+      - dbnet
+    ports:
+      - '127.0.0.1:8000:8000'
+    volumes:
+      - /app
+
+    depends_on:
+      - postgres
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - '127.0.0.1:8080:8080'
+    links:
+      - 'postgres:db'
+    networks:
+      - dbnet
+    depends_on:
+      - postgres
+
+
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: dbpostgres
+    volumes:
+      - pereval-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${FSTR_DB_LOGIN}
+      POSTGRES_PASSWORD: ${FSTR_DB_PASS}
+    networks:
+      - dbnet
+
+networks:
+  dbnet:
+    driver: bridge
+
+volumes:
+  pereval-data:

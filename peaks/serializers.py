@@ -1,5 +1,3 @@
-from django.contrib.sites import requests
-from django.core.files.base import ContentFile
 from rest_framework import serializers
 from .models import CustomUser, Pereval_added, Coords, Images, Level
 
@@ -11,15 +9,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'email': {'validators': []}}
 
 
-
 class ImagesSerializer(serializers.ModelSerializer):
     # data = serializers.CharField(write_only=True)
 
     class Meta:
         model = Images
-        fields = ['title','data']
-
-
+        fields = ['title', 'data']
 
 
 class LevelSerializer(serializers.ModelSerializer):
@@ -37,10 +32,9 @@ class CoordsSerializer(serializers.ModelSerializer):
 class PerevalSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
 
-    images = ImagesSerializer(many=True,)
+    images = ImagesSerializer(many=True, )
     level = LevelSerializer()
     coords = CoordsSerializer()
-
 
     class Meta:
         model = Pereval_added
@@ -52,21 +46,16 @@ class PerevalSerializer(serializers.ModelSerializer):
             'coords', 'images',
         ]
 
-
-
     def create(self, validated_data):
-        print(validated_data)
-
-        level_data = validated_data.pop('level',{})
+        level_data = validated_data.pop('level', {})
         user_data = validated_data.pop('user', {})
         coords_data = validated_data.pop('coords', {})
         images_data = validated_data.pop('images', [])
-        print(images_data)
+
         user, _ = CustomUser.objects.get_or_create(email=user_data['email'], defaults=user_data)
         coords = Coords.objects.create(**coords_data)
         pereval = Pereval_added.objects.create(user=user, coords=coords, **validated_data)
         level = Level.objects.create(pereval=pereval, **level_data)
-        print(images_data)
 
         for image_item in images_data:
             title_img = image_item["title"]
@@ -77,7 +66,3 @@ class PerevalSerializer(serializers.ModelSerializer):
                 data=data_img
             )
         return pereval
-
-
-
-

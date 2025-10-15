@@ -63,8 +63,9 @@ class Pereval_added(models.Model):
 class Images(models.Model):
     pereval = models.ForeignKey(Pereval_added, on_delete=models.CASCADE, related_name='images')
     title = models.CharField(max_length=128)
-    # data = models.CharField(max_length=128)
-    data = models.ImageField(upload_to='uploads/')
+    data = models.CharField(max_length=128)
+
+    # data = models.ImageField(upload_to='uploads/')
 
     def __str__(self):
         return self.title

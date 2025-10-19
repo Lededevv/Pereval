@@ -1,15 +1,16 @@
 from rest_framework import serializers
 from .models import CustomUser, Pereval_added, Coords, Images, Level
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(WritableNestedModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email', 'last_name', 'first_name', 'otc', 'phone', 'username']
         extra_kwargs = {'email': {'validators': []}}
 
 
-class ImagesSerializer(serializers.ModelSerializer):
+class ImagesSerializer(WritableNestedModelSerializer):
     # data = serializers.CharField(write_only=True)
 
     class Meta:
@@ -17,21 +18,21 @@ class ImagesSerializer(serializers.ModelSerializer):
         fields = ['title', 'data']
 
 
-class LevelSerializer(serializers.ModelSerializer):
+class LevelSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Level
         fields = ['winter', 'summer', 'autumn', 'spring']
 
 
-class CoordsSerializer(serializers.ModelSerializer):
+class CoordsSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Coords
         fields = ['latitude', 'longitude', 'height']
 
 
-class PerevalSerializer(serializers.ModelSerializer):
+class PerevalSerializer(WritableNestedModelSerializer):
     user = CustomUserSerializer()
-
+    status = serializers.CharField(read_only=True)
     images = ImagesSerializer(many=True, )
     level = LevelSerializer()
     coords = CoordsSerializer()
@@ -41,7 +42,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         fields = [
             'beauty_title', 'title',
             'other_titles', 'connect',
-            'add_time',
+            'add_time', 'status',
             'user', 'level',
             'coords', 'images',
         ]

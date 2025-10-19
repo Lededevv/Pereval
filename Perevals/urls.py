@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from peaks.views import PerevalViewSet
 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 router.register(r'perevals', PerevalViewSet)
 
 urlpatterns = [

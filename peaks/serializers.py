@@ -31,7 +31,7 @@ class CoordsSerializer(serializers.ModelSerializer):
 
 class PerevalSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
-
+    status = serializers.CharField(read_only=True)
     images = ImagesSerializer(many=True, )
     level = LevelSerializer()
     coords = CoordsSerializer()
@@ -41,7 +41,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         fields = [
             'beauty_title', 'title',
             'other_titles', 'connect',
-            'add_time',
+            'add_time', 'status',
             'user', 'level',
             'coords', 'images',
         ]

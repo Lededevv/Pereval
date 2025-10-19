@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from peaks.models import Pereval_added
 from peaks.serializers import PerevalSerializer
+from peaks.utils import check_update_pereval, update_response
 
 
 class PerevalViewSet(viewsets.ModelViewSet):
@@ -36,7 +37,7 @@ class PerevalViewSet(viewsets.ModelViewSet):
         update_pereval = check_update_pereval(request, pereval, user_dict)
         if update_pereval:
             return update_pereval
-        serializer.is_valid(raise_exceptions=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return update_response()
 

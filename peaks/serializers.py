@@ -37,6 +37,16 @@ class PerevalSerializer(WritableNestedModelSerializer):
     level = LevelSerializer()
     coords = CoordsSerializer()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        method = kwargs.get('context', {}).get('request').method
+        if method == 'PATCH' or method == 'PUT':
+            # Если идет обновление, устанавливаем поле readonly
+            self.fields['user'].read_only = True
+        elif method == 'POST':
+            # При создании оставляем доступ для записи
+            self.fields['user'].read_only = False
+
     class Meta:
         model = Pereval_added
         fields = [
@@ -46,6 +56,13 @@ class PerevalSerializer(WritableNestedModelSerializer):
             'user', 'level',
             'coords', 'images',
         ]
+
+    def update(self, instance, validated_data):
+
+        validated_data.pop('status', None)
+        validated_data.pop('add_time', None)
+
+        return super().update(instance, validated_data)
 
     def create(self, validated_data):
         level_data = validated_data.pop('level', {})

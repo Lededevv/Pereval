@@ -6,7 +6,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(unique=True, max_length=30, blank=True, null=True)
     otc = models.CharField(max_length=128, blank=True)
     phone = models.CharField(max_length=16, blank=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
@@ -16,6 +16,7 @@ class CustomUser(AbstractUser):
         blank=True,
         help_text='The groups this user belongs to.',
         related_name="custom_user_groups",
+
         related_query_name="custom_user_group",
     )
 

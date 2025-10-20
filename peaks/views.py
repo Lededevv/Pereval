@@ -10,6 +10,7 @@ class PerevalViewSet(viewsets.ModelViewSet):
     queryset = Pereval_added.objects.all()
     serializer_class = PerevalSerializer
     http_method_names = ['get', 'post', 'patch']
+    filterset_fields = ('user__email',)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -27,8 +28,6 @@ class PerevalViewSet(viewsets.ModelViewSet):
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
 
-
-
     def partial_update(self, request, *args, **kwargs):
         pereval = self.get_object()
         user_dict = model_to_dict(pereval.user)
@@ -40,4 +39,3 @@ class PerevalViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return update_response()
-

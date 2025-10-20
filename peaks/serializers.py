@@ -1,15 +1,16 @@
 from rest_framework import serializers
 from .models import CustomUser, Pereval_added, Coords, Images, Level
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(WritableNestedModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email', 'last_name', 'first_name', 'otc', 'phone', 'username']
         extra_kwargs = {'email': {'validators': []}}
 
 
-class ImagesSerializer(serializers.ModelSerializer):
+class ImagesSerializer(WritableNestedModelSerializer):
     # data = serializers.CharField(write_only=True)
 
     class Meta:
@@ -17,24 +18,34 @@ class ImagesSerializer(serializers.ModelSerializer):
         fields = ['title', 'data']
 
 
-class LevelSerializer(serializers.ModelSerializer):
+class LevelSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Level
         fields = ['winter', 'summer', 'autumn', 'spring']
 
 
-class CoordsSerializer(serializers.ModelSerializer):
+class CoordsSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Coords
         fields = ['latitude', 'longitude', 'height']
 
 
-class PerevalSerializer(serializers.ModelSerializer):
+class PerevalSerializer(WritableNestedModelSerializer):
     user = CustomUserSerializer()
     status = serializers.CharField(read_only=True)
     images = ImagesSerializer(many=True, )
     level = LevelSerializer()
     coords = CoordsSerializer()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        method = kwargs.get('context', {}).get('request').method
+        if method == 'PATCH' or method == 'PUT':
+            # Если идет обновление, устанавливаем поле readonly
+            self.fields['user'].read_only = True
+        elif method == 'POST':
+            # При создании оставляем доступ для записи
+            self.fields['user'].read_only = False
 
     class Meta:
         model = Pereval_added
@@ -45,6 +56,13 @@ class PerevalSerializer(serializers.ModelSerializer):
             'user', 'level',
             'coords', 'images',
         ]
+
+    def update(self, instance, validated_data):
+
+        validated_data.pop('status', None)
+        validated_data.pop('add_time', None)
+
+        return super().update(instance, validated_data)
 
     def create(self, validated_data):
         level_data = validated_data.pop('level', {})

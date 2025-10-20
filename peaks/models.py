@@ -16,6 +16,7 @@ class CustomUser(AbstractUser):
         blank=True,
         help_text='The groups this user belongs to.',
         related_name="custom_user_groups",
+
         related_query_name="custom_user_group",
     )
 

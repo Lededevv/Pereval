@@ -1,13 +1,29 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-
+from rest_framework import routers, permissions
+from drf_yasg.views import get_schema_view
 from peaks.views import PerevalViewSet
+from drf_yasg import openapi
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Perevals API",
+        default_version='v1',
+        description="Getting a list of mountain passes. Adding and changing records of passes",
+        terms_of_service="https://example.com/policies/terms/",
+        contact=openapi.Contact(email="support@example.com"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=([permissions.AllowAny,]),
+)
 router = routers.DefaultRouter()
 router.register(r'perevals', PerevalViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

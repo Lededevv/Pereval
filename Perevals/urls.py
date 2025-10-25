@@ -19,7 +19,7 @@ schema_view = get_schema_view(
     permission_classes=([permissions.AllowAny,]),
 )
 router = routers.DefaultRouter()
-router.register(r'perevals', PerevalViewSet)
+router.register(r'perevals', PerevalViewSet, basename="perevals")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

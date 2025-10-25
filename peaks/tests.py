@@ -1,9 +1,11 @@
 import json
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from peaks.models import Pereval_added, CustomUser, Coords, Level, Images
+from peaks.models import Pereval_added, CustomUser, Coords, Level
 from peaks.serializers import PerevalSerializer
+
 
 class PerevalTestCase(APITestCase):
     def setUp(self):
@@ -25,13 +27,15 @@ class PerevalTestCase(APITestCase):
                 longitude=456.00,
                 height=1001,
             ),
-            level=Level.objects.create(
-                winter="1A",
-                summer="1A",
-                autumn="1A",
-                spring="",
-            ),
         )
+        self.level = Level.objects.create(
+            winter="1A",
+            summer="1A",
+            autumn="1A",
+            spring="",
+            pereval=self.pereval_test1
+        )
+
         self.pereval_test2 = Pereval_added.objects.create(
             beauty_title="beauty_title_test2",
             title="title_test2",
@@ -50,25 +54,23 @@ class PerevalTestCase(APITestCase):
                 longitude=654.00,
                 height=1001,
             ),
-            level=Level.objects.create(
-                winter="1b",
-                summer="1b",
-                autumn="12",
-                spring="",
-            ),
+        )
+        self.level = Level.objects.create(
+            winter="1b",
+            summer="1b",
+            autumn="12",
+            spring="",
+            pereval=self.pereval_test2
+
         )
 
     def test_get_list(self):
-        url = reverse('pereval-list')
+        url = reverse('perevals-list')
+
         response = self.client.get(url)
-        serializer_data = PerevalSerializer([self.pereval_test1, self.pereval_test2], many=True).data
+        serializer_data = PerevalSerializer([self.pereval_test1, self.pereval_test2], many=True,
+                                            context={'request': response.wsgi_request}).data
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer_data)
         self.assertEqual(first=2, second=len(serializer_data))
 
-    # def test_get_detail(self):
-    #     url = reverse('pereval-detail', kwargs={'pk': self.pereval_1.pk})
-    #     response = self.client.get(url)
-    #     serializer_data = PerevalSerializer(self.pereval_1).data
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data, serializer_data)

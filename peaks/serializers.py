@@ -40,6 +40,7 @@ class PerevalSerializer(WritableNestedModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         method = kwargs.get('context', {}).get('request').method
+
         if method == 'PATCH' or method == 'PUT':
             # Если идет обновление, устанавливаем поле readonly
             self.fields['user'].read_only = True
@@ -84,3 +85,10 @@ class PerevalSerializer(WritableNestedModelSerializer):
                 data=data_img
             )
         return pereval
+
+# user=CustomUser.objects.create(
+#                 email="emailtest1@mail.ru",
+#                 last_name="fam_test1",
+#                 first_name="name_test1",
+#                 otc="otc_test1",
+#                 phone="8900000001",

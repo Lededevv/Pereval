@@ -43,6 +43,7 @@ class Coords(models.Model):
 
 
 class Pereval_added(models.Model):
+
     STATUS_CHOICES = (("new", "новый"),
                       ("pending", "на рассмотрении"),
                       ("accept", "принят"),

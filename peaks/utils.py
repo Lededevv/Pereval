@@ -11,7 +11,7 @@ def check_user_dict(user_dict, request_dict_user):
 def update_response():
     return Response(
         {'state': 1, 'message': 'Перевал успешно обновлен'},
-        status=status.HTTP_400_BAD_REQUEST
+        status=status.HTTP_200_OK
     )
 
 

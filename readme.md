@@ -5,25 +5,32 @@
 ## Основные функции
 
  **Получение списка перевалов**:  
-    - GET /api/perevals
-    - Ответ: Список всех перевалов в формате JSON.
+ - GET /api/perevals
+ - Ответ: Список всех перевалов в формате JSON.
+
+**Получение списка перевалов пользователя по email**:
+```http
+GET /api/perevals/?user_id__email=<email>
+
+```     
+Ответ: Список перевалов в формате JSON
      
  **Добавление нового перевала**:  
    - POST /api/perevals
    - Пример запроса: JSON с данными о перевале:
       ```json
            {  
-            "beauty_title": "ПЕРЕВАЛ-ТЕСТ",
-            "title": "ПЕРЕВАЛ-ТЕСТ",
-            "other_titles": "ПЕРЕВАЛ-ТЕСТ",
-            "connect": "",
+            "beauty_title": "ПЕРЕВАЛ",
+            "title": "ПЕРЕВАЛ",
+            "other_titles": "ПЕРЕВАЛ",
+            "connect": "rtgr",
             "add_time": "2021-09-22T13:18:13",
             "user": {
                 "email": "test@test.com",
-                "fam": "Пользователь",
-                "name": "Пользователь",
-                "otc": "Пользователь",
-                "phone": "89000000003"
+                "fam": "user",
+                "name": "user",
+                "otc": "user",
+                "phone": "8900000056"
             },
             "coords": {
                 "latitude": "45.3842",

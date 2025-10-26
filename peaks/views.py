@@ -23,7 +23,7 @@ class PerevalViewSet(viewsets.ModelViewSet):
             })
         else:
             return Response({
-                "status": 400,  # Статус код лучше сменить на 400 Bad Request
+                "status": 400,
                 "message": "Некорректные данные",
                 "errors": serializer.errors
             }, status=status.HTTP_400_BAD_REQUEST)
